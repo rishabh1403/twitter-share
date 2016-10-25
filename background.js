@@ -4,51 +4,37 @@ var contextTypes = [
         "image",
         "link"
     ];
+
 for(var i=0;i<4;i++){
-    var c = contextTypes[i];
+
     var contextMenuOptions = {
-        "id" : c,
-        "title" : "Share %s On Twitter",
-        "contexts" : [c]
+        "id" : contextTypes[i],
+        "title" : "Share this "+contextTypes[i]+" On Twitter",
+        "contexts" : [contextTypes[i]]
         }
     chrome.contextMenus.create(contextMenuOptions);
 }
 
 
-
-chrome.contextMenus.onClicked.addListener(function(clickData){
-    //alert(clickData.menuItemId);
-    if(clickData.menuItemId==="selection"){
-        var tabObject = {
-        "url" : "https://twitter.com/intent/tweet?text="+clickData.selectionText
+chrome.contextMenus.onClicked.addListener(function(clickData,tab){
+    var tabObject = {
+        "url" : "https://twitter.com/intent/tweet?text=",
+        "type":"panel",
+        "width" : screen.availWidth/2,
+        "height" : screen.availHeight/2
         }
-        chrome.tabs.create(tabObject,function(tab){
-             alert(tab.id);
-         })
+    if(clickData.menuItemId==="selection"){
+        tabObject.url = tabObject.url+encodeURIComponent(clickData.selectionText);
     }
     else if(clickData.menuItemId==="image"){
-        var tabObject = {
-        "url" : "https://twitter.com/intent/tweet?text="+clickData.selectionText
-        }
-        chrome.tabs.create(tabObject,function(tab){
-             alert(tab.id);
-         })
+        tabObject.url = tabObject.url+encodeURIComponent(clickData.srcUrl);
     } 
     else if(clickData.menuItemId==="link"){
-        var tabObject = {
-        "url" : "https://twitter.com/intent/tweet?url="+clickData.linkUrl
-        }
-        chrome.tabs.create(tabObject,function(tab){
-             alert(tab.id);
-         })
+        tabObject.url = tabObject.url+encodeURIComponent(clickData.linkUrl);
     }
     else if(clickData.menuItemId==="page"){
-        var tabObject = {
-        "url" : "https://twitter.com/intent/tweet?text="+clickData.selectionText
-        }
-        chrome.tabs.create(tabObject,function(tab){
-             alert(tab.id);
-         })
+        tabObject.url = tabObject.url+encodeURIComponent(tab.title)+"&url="+encodeURIComponent(clickData.pageUrl);
     }
-    
+    chrome.windows.create(tabObject);
+
 })
