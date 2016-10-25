@@ -1,0 +1,20 @@
+{
+    "manifest_version" : 2,
+    "name" : "Twitter Share",
+    "description" : "Share any text, link, image or page to twitter",
+    "version" : "0.1.0",
+    "icons":{
+        "16" : "t16.png",
+        "32" : "t32.png",
+        "48" : "t64.png",
+        "128":"t128.png"
+    },
+    "background" : {
+        "scripts":["background.js"],
+        "persistent" : false
+    },
+    "permissions" : [
+        "contextMenus",
+        "tabs"
+    ]
+}
